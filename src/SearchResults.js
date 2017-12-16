@@ -18,7 +18,7 @@ class SearchResults extends Component {
 
   updateQuery = (query) => {
     this.setState({query: query.trim()})
-    query !== "" && this.searchBooks(this.state.query)
+    query !== "" && this.searchBooks(query)
   }
 
   searchBooks = (query) => {
@@ -29,14 +29,18 @@ class SearchResults extends Component {
   }
 
   render() {
-    this.state.searchResults !== undefined &&
-      this.state.searchResults.map((book) => {
-        const oldBook = this.props.books.find((item) => item.id === book.id)
-        oldBook !== undefined
-        ?(book.shelf=oldBook.shelf)
-        :(book.shelf="none")
-        return true
-      })
+    // this.state.searchResults !== undefined &&
+      // this.state.searchResults.map((book) => {
+      //   const oldBook = this.props.books.find((item) => item.id === book.id)
+      //   oldBook !== undefined
+      //   ?(book.shelf=oldBook.shelf)
+      //   :(book.shelf="none")
+      //   return true
+      // })
+    const hashTable = {}
+    this.props.books.forEach((book) => hashTable[book.id] = book.shelf)
+    this.state.searchResults !== undefined
+    && this.state.searchResults.forEach((book) => book.shelf = hashTable[book.id] || 'none')
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -54,8 +58,8 @@ class SearchResults extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            { this.state.searchResults !== undefined &&
-              this.state.searchResults.map((book) => {
+            { this.state.searchResults !== undefined
+              && this.state.searchResults.map((book) => {
                 return (
                   <li key={book.id}>
                     <Book book={book} handleUpdate={this.props.changeShelf}/>

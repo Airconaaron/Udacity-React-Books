@@ -10,11 +10,30 @@ class BookShelves extends Component {
   }
 
   render() {
+    const shelves = [
+      {
+        id: 'currentlyReading',
+        title: 'Currently Reading',
+        books: this.props.books.filter(book => book.shelf === 'currentlyReading')
+      },
+      {
+        id: 'wantToRead',
+        title: 'Want To Read',
+        books: this.props.books.filter(book => book.shelf === 'wantToRead')
+      },
+      {
+        id: 'read',
+        title: 'Read',
+        books:this.props.books.filter(book => book.shelf === 'read')
+      },
+    ]
     return(
       <div className="list-books-content">
-        <BookShelf shelf="currentlyReading" books={this.props.books} changeShelf={this.props.changeShelf}/>
-        <BookShelf shelf="wantToRead" books={this.props.books} changeShelf={this.props.changeShelf}/>
-        <BookShelf shelf="read" books={this.props.books} changeShelf={this.props.changeShelf}/>
+        {
+          shelves.map(shelf => {
+            return <BookShelf key={shelf.id} shelf={shelf.id} books={shelf.books} title={shelf.title} changeShelf={this.props.changeShelf}/>
+          })
+        }
       </div>
   )}
 }
