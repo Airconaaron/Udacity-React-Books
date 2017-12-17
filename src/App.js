@@ -24,13 +24,17 @@ class BooksApp extends Component {
       this.setState({books: newBooks})
     })
     .catch((err) => {
-      this.setState({books: []})
+      this.getBooks()
     })
   }
 
   getBooks = () => {
-    BooksAPI.getAll().then((books) => {
+    BooksAPI.getAll()
+    .then((books) => {
       this.setState({books: books})
+    })
+    .catch((err) => {
+      this.setState({books: []})
     })
   }
 
