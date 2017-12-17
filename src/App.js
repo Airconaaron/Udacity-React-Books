@@ -7,8 +7,11 @@ import './App.css'
 
 class BooksApp extends Component {
 
-  state = {
-    books: []
+  constructor(props) {
+    super(props)
+    this.state = {
+      books: []
+    }
   }
 
   updateShelf = (shelf, book) => {
@@ -19,6 +22,9 @@ class BooksApp extends Component {
       newBook.shelf = shelf
       const newBooks = this.state.books.filter((element) => element.id !== book.id).concat([newBook])
       this.setState({books: newBooks})
+    })
+    .catch((err) => {
+      this.setState({books: []})
     })
   }
 

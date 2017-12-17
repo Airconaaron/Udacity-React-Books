@@ -3,6 +3,7 @@ import * as BooksAPI from './BooksAPI'
 import { Link } from 'react-router-dom'
 import Book from './Book'
 import PropTypes from 'prop-types'
+import { Debounce } from 'react-throttle';
 
 class SearchResults extends Component {
 
@@ -10,10 +11,12 @@ class SearchResults extends Component {
     books: PropTypes.array.isRequired,
     changeShelf: PropTypes.func.isRequired
   }
-
-  state = {
-    searchResults:[],
-    query: ""
+  constructor(props) {
+    super(props)
+    this.state = {
+      searchResults: [],
+      query: ""
+    }
   }
 
   updateQuery = (query) => {
@@ -26,17 +29,12 @@ class SearchResults extends Component {
     .then((results) => {
       this.setState({searchResults:results})
     })
+    .catch((err) => {
+      this.setState({searchResults: []})
+    })
   }
 
   render() {
-    // this.state.searchResults !== undefined &&
-      // this.state.searchResults.map((book) => {
-      //   const oldBook = this.props.books.find((item) => item.id === book.id)
-      //   oldBook !== undefined
-      //   ?(book.shelf=oldBook.shelf)
-      //   :(book.shelf="none")
-      //   return true
-      // })
     const hashTable = {}
     this.props.books.forEach((book) => hashTable[book.id] = book.shelf)
     this.state.searchResults !== undefined
@@ -46,14 +44,16 @@ class SearchResults extends Component {
         <div className="search-books-bar">
           <Link className="close-search" to="/">Close</Link>
           <div className="search-books-input-wrapper">
-            <input
-              type="text"
-              placeholder="Search by title or author"
-              onChange={(event) => {
-                this.updateQuery(event.target.value)
-              }
-            }/>
+            <Debounce time="250" handler="onChange">
+              <input
+                type="text"
+                placeholder="Search by title or author"
+                onChange={(event) => {
+                  this.updateQuery(event.target.value)
+                }
 
+              }/>
+            </Debounce>
           </div>
         </div>
         <div className="search-books-results">
